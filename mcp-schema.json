@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Custom MCP Server Function Schema",
+  "description": "Schema defining functions provided by the Custom MCP Server",
+  "type": "object",
+  "properties": {
+    "functions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/function"
+      }
+    }
+  },
+  "definitions": {
+    "function": {
+      "type": "object",
+      "required": ["name", "description", "parameters"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Function name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the function"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["object"],
+              "description": "Type of the parameters object"
+            },
+            "properties": {
+              "type": "object",
+              "description": "Properties of the parameters object"
+            },
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of required parameters"
+            }
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "name": "brave_web_search",
+      "description": "Performs a web search using the Brave Search API.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query (max 400 chars, 50 words)"
+          },
+          "count": {
+            "type": "number",
+            "description": "Number of results (1-20, default 10)",
+            "default": 10
+          },
+          "offset": {
+            "type": "number",
+            "description": "Pagination offset (max 9, default 0)",
+            "default": 0
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "brave_local_search",
+      "description": "Searches for local businesses and places using Brave's Local Search API.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Local search query (e.g. 'pizza near Central Park')"
+          },
+          "count": {
+            "type": "number",
+            "description": "Number of results (1-20, default 5)",
+            "default": 5
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read the complete contents of a file from the file system.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to the file to read"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "read_multiple_files",
+      "description": "Read the contents of multiple files simultaneously.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of file paths to read"
+          }
+        },
+        "required": ["paths"]
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Create a new file or completely overwrite an existing file with new content.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path where to create/update the file"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content to write to the file"
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "sequentialthinking",
+      "description": "A detailed tool for dynamic and reflective problem-solving through thoughts.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "thought": {
+            "type": "string",
+            "description": "Your current thinking step"
+          },
+          "nextThoughtNeeded": {
+            "type": "boolean",
+            "description": "Whether another thought step is needed"
+          },
+          "thoughtNumber": {
+            "type": "integer",
+            "description": "Current thought number",
+            "minimum": 1
+          },
+          "totalThoughts": {
+            "type": "integer",
+            "description": "Estimated total thoughts needed",
+            "minimum": 1
+          },
+          "isRevision": {
+            "type": "boolean",
+            "description": "Whether this revises previous thinking"
+          },
+          "revisesThought": {
+            "type": "integer",
+            "description": "Which thought is being reconsidered",
+            "minimum": 1
+          },
+          "branchFromThought": {
+            "type": "integer",
+            "description": "Branching point thought number",
+            "minimum": 1
+          },
+          "branchId": {
+            "type": "string",
+            "description": "Branch identifier"
+          },
+          "needsMoreThoughts": {
+            "type": "boolean",
+            "description": "If more thoughts are needed"
+          }
+        },
+        "required": ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]
+      }
+    },
+    {
+      "name": "download_file",
+      "description": "Download a file from a URL and save it locally",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to download from"
+          },
+          "destination": {
+            "type": "string",
+            "description": "Local path to save the file to"
+          },
+          "headers": {
+            "type": "object",
+            "description": "Optional HTTP headers for the request"
+          }
+        },
+        "required": ["url", "destination"]
+      }
+    },
+    {
+      "name": "download_multiple_files",
+      "description": "Download multiple files from URLs and save them locally",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "URL to download from"
+                },
+                "destination": {
+                  "type": "string",
+                  "description": "Local path to save the file to"
+                },
+                "headers": {
+                  "type": "object",
+                  "description": "Optional HTTP headers for the request"
+                }
+              },
+              "required": ["url", "destination"]
+            },
+            "description": "Array of files to download"
+          }
+        },
+        "required": ["files"]
+      }
+    }
+  ]
+}

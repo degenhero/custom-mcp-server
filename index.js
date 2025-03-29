@@ -25,6 +25,7 @@ const braveSearch = require('./functions/brave-search');
 const filesystem = require('./functions/filesystem');
 const github = require('./functions/github');
 const sequentialThinking = require('./functions/sequential-thinking');
+const download = require('./functions/download');
 
 // Define routes
 app.post('/mcp', async (req, res) => {
@@ -79,6 +80,11 @@ app.post('/mcp', async (req, res) => {
         
       case 'sequentialthinking':
         result = await sequentialThinking.handleFunction(functionName, parameters);
+        break;
+
+      case 'download_file':
+      case 'download_multiple_files':
+        result = await download.handleFunction(functionName, parameters);
         break;
         
       default:
